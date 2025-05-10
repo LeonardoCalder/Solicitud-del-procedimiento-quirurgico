@@ -3,9 +3,9 @@ document.getElementById('form').addEventListener('submit', function(event) {
 
   // Leer campos del formulario
   const pacienteId     = document.getElementById('paciente').value;
-  const procedimiento  = document.getElementById('proc').value; // Ej: Apendicectomía
+  const procedimiento  = document.getElementById('proc').value;
   const medicoId       = document.getElementById('medico').value;
-  const prioridad      = document.getElementById('prioridad').value; // Ej: urgent
+  const prioridad      = document.getElementById('prioridad').value;
   const fechaSolicitud = document.getElementById('fechaCita').value;
   const horaSolicitud  = document.getElementById('hora').value;
 
@@ -18,7 +18,7 @@ document.getElementById('form').addEventListener('submit', function(event) {
     id: identificador,
     status: 'active',
     intent: 'order',
-    priority: prioridad, // Ej: "urgent", "routine", etc.
+    priority: prioridad, // stat, urgent, routine
     code: {
       coding: [
         {
