@@ -1,112 +1,96 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solicitud Médica</title>
+  <meta charset="UTF-8">
+  <title>Solicitud de Procedimiento Quirúrgico</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
   <style>
-    :root {
-      --bg: #e8fdf5;
-      --primary: #2c977d;
-      --secondary: #a1e6d3;
-      --text: #1e3f3a;
-      --hover: #237a65;
-    }
-
     body {
-      font-family: sans-serif;
-      background: var(--bg);
-      margin: 0; padding: 2rem;
+      font-family: 'Roboto', sans-serif;
+      background-color: #e0f7f7;
+      color: #004d4d;
+      margin: 0;
+      padding: 0;
     }
 
-    .box {
+    .container {
       max-width: 600px;
-      margin: auto;
-      background: #fff;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-      border: 1px solid var(--secondary);
+      margin: 50px auto;
+      background-color: #b2f2f2;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 100, 100, 0.2);
     }
 
-    h1 {
+    h2 {
       text-align: center;
-      color: var(--primary);
-      margin-bottom: 1rem;
+      margin-bottom: 20px;
+      color: #007777;
     }
 
     label {
       display: block;
-      font-weight: 600;
-      margin: 1rem 0 .3rem;
-      color: var(--text);
+      margin-top: 15px;
+      font-weight: bold;
     }
 
-    input, select, textarea {
+    input, select {
       width: 100%;
-      padding: .65rem;
-      border: 1px solid var(--secondary);
-      border-radius: 6px;
-      background: #f8fefc;
-      font-size: 1rem;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #80dcdc;
+      border-radius: 8px;
+      background-color: #f0ffff;
     }
 
     button {
-      margin-top: 1.5rem;
+      margin-top: 20px;
       width: 100%;
-      background: var(--primary);
+      padding: 12px;
+      background-color: #00cccc;
       color: white;
       border: none;
-      padding: 1rem;
-      font-size: 1rem;
       border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
-      transition: background 0.3s;
     }
 
     button:hover {
-      background: var(--hover);
+      background-color: #009999;
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>Solicitud Médica</h1>
+  <div class="container">
+    <h2>Solicitud de Procedimiento Quirúrgico</h2>
     <form id="form">
-      <label>Paciente *</label>
-      <input type="text" id="paciente" required />
-      
-      <label>Fecha de consulta *</label>
-      <input type="date" id="consulta" required />
-      
-      <label>Médico *</label>
-      <input type="text" id="medico" required />
-      
-      <label>Cédula *</label>
-      <input type="text" id="cedula" required />
-      
-      <label>Diagnóstico *</label>
-      <textarea id="dx" required></textarea>
-      
-      <label>Procedimiento *</label>
-      <input type="text" id="proc" required />
-      
-      <label>Justificación *</label>
-      <textarea id="just" required></textarea>
+      <label for="paciente">ID del Paciente:</label>
+      <input type="text" id="paciente" required>
 
-      <label>Fecha preferida de cita</label>
-      <input type="date" id="fechaCita" />
-      
-      <label>Horario</label>
-      <select id="hora">
-        <option value="matutino">8–12</option>
-        <option value="vespertino">12–16</option>
-        <option value="nocturno">16–20</option>
+      <label for="proc">Procedimiento:</label>
+      <input type="text" id="proc" placeholder="Apendicectomía" required>
+
+      <label for="medico">ID del Médico Solicitante:</label>
+      <input type="text" id="medico" required>
+
+      <label for="prioridad">Prioridad:</label>
+      <select id="prioridad" required>
+        <option value="">--Seleccione--</option>
+        <option value="urgent">Urgente</option>
+        <option value="routine">Rutina</option>
+        <option value="asap">Lo antes posible</option>
       </select>
+
+      <label for="fechaCita">Fecha de la Solicitud:</label>
+      <input type="date" id="fechaCita" required>
+
+      <label for="hora">Hora de la Solicitud:</label>
+      <input type="time" id="hora" required>
 
       <button type="submit">Enviar Solicitud</button>
     </form>
   </div>
-<script src="app.js"></script>
+
+  <script src="app.js"></script>
 </body>
 </html>
