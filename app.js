@@ -1,47 +1,63 @@
 document.getElementById('form').addEventListener('submit', function(event) {
   event.preventDefault();
- 
-  // Obtener los valores del formulario
-  const paciente = document.getElementById('paciente').value;
-  const consulta = document.getElementById('consulta').value;
-  const medico = document.getElementById('medico').value;
-  const cedula = document.getElementById('cedula').value;
-  const dx = document.getElementById('dx').value;
-  const proc = document.getElementById('proc').value;
-  const just = document.getElementById('just').value;
-  const fechaCita = document.getElementById('fechaCita').value;
-  const hora = document.getElementById('hora').value;
- 
-  // Construir el objeto con los datos de la solicitud médica
-  const serviceRequestData = {
-    paciente: paciente,
-    consulta: consulta,
-    medico: medico,
-    cedula: cedula,
-    diagnostico: dx,
-    procedimiento: proc,
-    justificacion: just,
-    fechaCita: fechaCita,
-    hora: hora
+
+  // Leer campos del formulario
+  const pacienteId     = document.getElementById('paciente').value;
+  const procedimiento  = document.getElementById('proc').value; // Ej: Apendicectomía
+  const medicoId       = document.getElementById('medico').value;
+  const prioridad      = document.getElementById('prioridad').value; // Ej: urgent
+  const fechaSolicitud = document.getElementById('fechaCita').value;
+  const horaSolicitud  = document.getElementById('hora').value;
+
+  // Crear un identificador único para la solicitud
+  const identificador = 'SR-' + Date.now();
+
+  // Construcción del recurso FHIR ServiceRequest
+  const serviceRequestFHIR = {
+    resourceType: 'ServiceRequest',
+    id: identificador,
+    status: 'active',
+    intent: 'order',
+    priority: prioridad, // Ej: "urgent", "routine", etc.
+    code: {
+      coding: [
+        {
+          system: 'http://snomed.info/sct',
+          code: '80146002', // Código SNOMED para apendicectomía
+          display: procedimiento
+        }
+      ],
+      text: procedimiento
+    },
+    subject: {
+      reference: `Patient/${pacienteId}`
+    },
+    requester: {
+      reference: `Practitioner/${medicoId}`
+    },
+    authoredOn: `${fechaSolicitud}T${horaSolicitud}:00Z`
   };
- 
-  console.log(serviceRequestData);
- 
-  // Enviar la solicitud al backend (con trailing slash)
-  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/service-request/', {
+
+  console.log('Enviando FHIR ServiceRequest:', serviceRequestFHIR);
+
+  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/ServiceRequest', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(serviceRequestData)
+    body: JSON.stringify(serviceRequestFHIR)
   })
-  .then(response => {
+  .then(async response => {
     if (!response.ok) {
       throw new Error('Error en la solicitud: ' + response.statusText);
     }
-    return response.json();
-  })
-  .then(data => {
-    console.log('Success:', data);
-    alert('Service Request creado exitosamente! ID: ' + data._id);
+
+    const ct = response.headers.get('content-type') || '';
+    if (ct.includes('application/json')) {
+      const data = await response.json();
+      console.log('Success:', data);
+      alert('Service Request creado exitosamente! ID: ' + data.id);
+    } else {
+      alert('Service Request enviado, pero sin respuesta en JSON.');
+    }
   })
   .catch(error => {
     console.error('Error:', error);
