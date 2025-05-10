@@ -40,7 +40,7 @@ document.getElementById('form').addEventListener('submit', function(event) {
 
   console.log('Enviando FHIR ServiceRequest:', serviceRequestFHIR);
 
-  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/ServiceRequest', {
+  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/fhir/ServiceRequest', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(serviceRequestFHIR)
