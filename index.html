@@ -3,59 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solicitud de Servicio - HL7 FHIR</title>
+  <title>Solicitud de Procedimiento Quirúrgico</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f9f9f9;
+      background: linear-gradient(to right, #d9fdfb, #a1f4ed);
       margin: 0;
-      padding: 20px;
-      color: #333;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
       text-align: center;
-      color: #730024;
-    }
-
-    form {
-      max-width: 700px;
-      margin: 0 auto;
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    fieldset {
-      border: 2px solid #730024;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      padding: 20px;
-    }
-
-    legend {
-      padding: 0 10px;
-      font-weight: bold;
-      color: #730024;
+      color: #006b5f;
+      margin-bottom: 30px;
     }
 
     label {
-      display: block;
-      margin-top: 15px;
       font-weight: 600;
+      display: block;
+      margin-top: 20px;
     }
 
-    input[type="text"],
-    input[type="date"],
-    select,
-    textarea {
+    input, select, textarea {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-top: 5px;
       box-sizing: border-box;
+      background-color: #f0fefc;
     }
 
     textarea {
@@ -64,44 +49,32 @@
     }
 
     button {
-      background-color: #730024;
-      color: white;
-      padding: 12px 20px;
+      background-color: #00b4a0;
+      color: #fff;
+      padding: 14px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 16px;
+      margin-top: 30px;
       cursor: pointer;
-      transition: background-color 0.3s;
-      display: block;
       width: 100%;
-      margin-top: 20px;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
-      background-color: #5a001b;
+      background-color: #008b7e;
     }
 
     #result {
-      margin-top: 20px;
-      text-align: center;
-      color: green;
-      font-weight: bold;
-    
-    #result {
-      max-width: 700px;
-      margin: 20px auto;
-      font-size: 16px;
-}
-
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
-  <h1>Formulario de Solicitud de Servicio</h1>
-  <form id="serviceRequestForm">
-    <!-- Datos del Paciente -->
-    <fieldset>
-      <legend>Datos del Paciente</legend>
+  <div class="container">
+    <h1>Solicitud de Procedimiento Quirúrgico</h1>
+    <form id="serviceRequestForm">
+      <!-- Paciente -->
       <label for="patientId">ID del Paciente:</label>
       <input type="text" id="patientId" name="patientId" required>
 
@@ -119,19 +92,16 @@
         <option value="other">Otro</option>
         <option value="unknown">Desconocido</option>
       </select>
-    </fieldset>
 
-    <!-- Datos de la Solicitud -->
-    <fieldset>
-      <legend>Datos de la Solicitud</legend>
+      <!-- Médico y Solicitud -->
       <label for="requester">Nombre del Médico Solicitante:</label>
       <input type="text" id="requester" name="requester" required>
 
       <label for="procedureCode">Código del Procedimiento:</label>
-      <input type="text" id="procedureCode" name="procedureCode" required>
+      <input type="text" id="procedureCode" name="procedureCode" value="80146002" required>
 
       <label for="procedureDescription">Descripción del Procedimiento:</label>
-      <textarea id="procedureDescription" name="procedureDescription" required></textarea>
+      <textarea id="procedureDescription" name="procedureDescription" required>Apendicectomía</textarea>
 
       <label for="requestDate">Fecha de Solicitud:</label>
       <input type="date" id="requestDate" name="requestDate" required>
@@ -144,12 +114,12 @@
         <option value="asap">Lo antes posible</option>
         <option value="stat">Inmediata</option>
       </select>
-    </fieldset>
 
-    <button type="submit">Enviar Solicitud</button>
-  </form>
+      <button type="submit">Enviar Solicitud</button>
+    </form>
 
-  <div id="result"></div>
+    <div id="result"></div>
+  </div>
 
   <script src="app.js"></script>
 </body>
