@@ -1,66 +1,54 @@
-document.getElementById('form').addEventListener('submit', function(event) {
+document.getElementById('serviceRequestForm').addEventListener('submit', function(event) {
   event.preventDefault();
 
-  // Leer campos del formulario
-  const pacienteId     = document.getElementById('paciente').value;
-  const procedimiento  = document.getElementById('proc').value;
-  const medicoId       = document.getElementById('medico').value;
-  const prioridad      = document.getElementById('prioridad').value;
-  const fechaSolicitud = document.getElementById('fechaCita').value;
-  const horaSolicitud  = document.getElementById('hora').value;
-
-  // Crear un identificador único para la solicitud
-  const identificador = 'SR-' + Date.now();
-
-  // Construcción del recurso FHIR ServiceRequest
-  const serviceRequestFHIR = {
-    resourceType: 'ServiceRequest',
-    id: identificador,
-    status: 'active',
-    intent: 'order',
-    priority: prioridad, // stat, urgent, routine
-    code: {
-      coding: [
-        {
-          system: 'http://snomed.info/sct',
-          code: '80146002', // Código SNOMED para apendicectomía
-          display: procedimiento
-        }
-      ],
-      text: procedimiento
-    },
-    subject: {
-      reference: `Patient/${pacienteId}`
-    },
-    requester: {
-      reference: `Practitioner/${medicoId}`
-    },
-    authoredOn: `${fechaSolicitud}T${horaSolicitud}:00Z`
+  // Obtener los valores del formulario
+  const serviceRequestData = {
+    patient_id: document.getElementById('patientId').value,
+    patient_name: document.getElementById('patientName').value,
+    patient_birth_date: document.getElementById('patientBirthDate').value,
+    patient_gender: document.getElementById('patientGender').value,
+    requester: document.getElementById('requester').value,
+    procedure_code: document.getElementById('procedureCode').value,
+    procedure_description: document.getElementById('procedureDescription').value,
+    request_date: document.getElementById('requestDate').value,
+    priority: document.getElementById('priority').value
   };
 
-  console.log('Enviando FHIR ServiceRequest:', serviceRequestFHIR);
+  console.log('Datos a enviar:', serviceRequestData);
 
-  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/service-request/', {
+  // Enviar la solicitud al backend
+  fetch('https://hl7-fhir-ehr-solangie-9665.onrender.com/service-request', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(serviceRequestFHIR)
+    body: JSON.stringify(serviceRequestData)
   })
-  .then(async response => {
+  .then(response => {
     if (!response.ok) {
       throw new Error('Error en la solicitud: ' + response.statusText);
     }
-
-    const ct = response.headers.get('content-type') || '';
-    if (ct.includes('application/json')) {
-      const data = await response.json();
-      console.log('Success:', data);
-      alert('Service Request creado exitosamente! ID: ' + data.id);
-    } else {
-      alert('Service Request enviado, pero sin respuesta en JSON.');
-    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Success:', data);
+    document.getElementById('result').innerHTML = `
+      <div style="background-color: #e6ffe6; border-left: 6px solid #4CAF50; padding: 16px; margin-top: 20px; border-radius: 8px;">
+        <h3 style="color: #2d662d;">¡Servicio registrado exitosamente!</h3>
+        <p><strong>ID:</strong> ${data._id}</p>
+        <p><strong>Paciente:</strong> ${serviceRequestData.patient_name}</p>
+        <p><strong>Procedimiento:</strong> ${serviceRequestData.procedure_description}</p>
+        <p><strong>Solicitado por:</strong> ${serviceRequestData.requester}</p>
+        <p><strong>Fecha:</strong> ${serviceRequestData.request_date}</p>
+      </div>
+    `;
+    document.getElementById('serviceRequestForm').reset();
   })
   .catch(error => {
     console.error('Error:', error);
-    alert('Hubo un error en la solicitud: ' + error.message);
+    document.getElementById('result').innerHTML = `
+      <div style="background-color: #ffe6e6; border-left: 6px solid #f44336; padding: 16px; margin-top: 20px; border-radius: 8px;">
+        <h3 style="color: #a94442;">Error al crear la solicitud</h3>
+        <p>${error.message}</p>
+      </div>
+    `;
   });
 });
