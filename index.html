@@ -3,44 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solicitud de Procedimiento Quirúrgico</title>
+  <title>Solicitud de Procedimiento Quirúrgico - FHIR</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #d9fdfb, #a1f4ed);
+      background-color: #e0f7f5;
       margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 50px auto;
-      background-color: #ffffff;
-      border-radius: 12px;
-      padding: 40px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      color: #044d4d;
     }
 
     h1 {
       text-align: center;
-      color: #006b5f;
+      color: #006d6d;
       margin-bottom: 30px;
     }
 
-    label {
-      font-weight: 600;
-      display: block;
-      margin-top: 20px;
+    form {
+      background-color: #ffffff;
+      max-width: 800px;
+      margin: auto;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 128, 128, 0.2);
     }
 
-    input, select, textarea {
+    fieldset {
+      border: 2px solid #00a3a3;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    legend {
+      font-weight: bold;
+      color: #007a7a;
+      padding: 0 10px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
       width: 100%;
-      padding: 12px;
-      margin-top: 6px;
-      border-radius: 8px;
+      padding: 10px;
+      margin-top: 5px;
       border: 1px solid #ccc;
+      border-radius: 6px;
       box-sizing: border-box;
-      background-color: #f0fefc;
     }
 
     textarea {
@@ -49,32 +65,55 @@
     }
 
     button {
-      background-color: #00b4a0;
-      color: #fff;
-      padding: 14px;
+      background-color: #00a3a3;
+      color: white;
       border: none;
-      border-radius: 10px;
+      padding: 14px 24px;
       font-size: 16px;
-      margin-top: 30px;
+      border-radius: 10px;
       cursor: pointer;
       width: 100%;
       transition: background-color 0.3s ease;
+      margin-top: 20px;
     }
 
     button:hover {
-      background-color: #008b7e;
+      background-color: #007a7a;
     }
 
     #result {
-      margin-top: 30px;
+      max-width: 800px;
+      margin: 30px auto;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .success {
+      background-color: #d2f8f6;
+      border-left: 6px solid #009999;
+      padding: 20px;
+      border-radius: 10px;
+      color: #004d4d;
+    }
+
+    .error {
+      background-color: #fdecea;
+      border-left: 6px solid #f44336;
+      padding: 20px;
+      border-radius: 10px;
+      color: #a94442;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Solicitud de Procedimiento Quirúrgico</h1>
-    <form id="serviceRequestForm">
-      <!-- Paciente -->
+
+  <h1>Solicitud de Procedimiento Quirúrgico</h1>
+
+  <form id="serviceRequestForm">
+    <!-- Datos del Paciente -->
+    <fieldset>
+      <legend>Datos del Paciente</legend>
+
       <label for="patientId">ID del Paciente:</label>
       <input type="text" id="patientId" name="patientId" required>
 
@@ -92,16 +131,20 @@
         <option value="other">Otro</option>
         <option value="unknown">Desconocido</option>
       </select>
+    </fieldset>
 
-      <!-- Médico y Solicitud -->
+    <!-- Datos de la Solicitud -->
+    <fieldset>
+      <legend>Datos de la Solicitud</legend>
+
       <label for="requester">Nombre del Médico Solicitante:</label>
       <input type="text" id="requester" name="requester" required>
 
       <label for="procedureCode">Código del Procedimiento:</label>
-      <input type="text" id="procedureCode" name="procedureCode" value="80146002" required>
+      <input type="text" id="procedureCode" name="procedureCode" required>
 
       <label for="procedureDescription">Descripción del Procedimiento:</label>
-      <textarea id="procedureDescription" name="procedureDescription" required>Apendicectomía</textarea>
+      <textarea id="procedureDescription" name="procedureDescription" required></textarea>
 
       <label for="requestDate">Fecha de Solicitud:</label>
       <input type="date" id="requestDate" name="requestDate" required>
@@ -114,12 +157,12 @@
         <option value="asap">Lo antes posible</option>
         <option value="stat">Inmediata</option>
       </select>
+    </fieldset>
 
-      <button type="submit">Enviar Solicitud</button>
-    </form>
+    <button type="submit">Enviar Solicitud</button>
+  </form>
 
-    <div id="result"></div>
-  </div>
+  <div id="result"></div>
 
   <script src="app.js"></script>
 </body>
