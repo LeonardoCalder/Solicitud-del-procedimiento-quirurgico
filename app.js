@@ -17,7 +17,7 @@ document.getElementById('serviceRequestForm').addEventListener('submit', functio
   console.log('Datos a enviar:', serviceRequestData);
 
   // Enviar la solicitud al backend
-  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/service-requests', {
+  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/service-request', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(serviceRequestData)
