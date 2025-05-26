@@ -1,26 +1,41 @@
 document.getElementById('serviceRequestForm').addEventListener('submit', function(event) {
   event.preventDefault();
 
-  // Obtener los valores del formulario
-  const serviceRequestData = {
-    patient_id: document.getElementById('patientId').value,
-    patient_name: document.getElementById('patientName').value,
-    patient_birth_date: document.getElementById('patientBirthDate').value,
-    patient_gender: document.getElementById('patientGender').value,
-    requester: document.getElementById('requester').value,
-    procedure_code: document.getElementById('procedureCode').value,
-    procedure_description: document.getElementById('procedureDescription').value,
-    request_date: document.getElementById('requestDate').value,
+  // Recopilar los datos del formulario
+  const patientId = document.getElementById('patientId').value;
+  const requesterName = document.getElementById('requester').value;
+
+  const serviceRequest = {
+    resourceType: "ServiceRequest",
+    status: "active",
+    intent: "order",
+    code: {
+      coding: [{
+        system: "http://snomed.info/sct",
+        code: document.getElementById('procedureCode').value,
+        display: document.getElementById('procedureDescription').value
+      }],
+      text: document.getElementById('procedureDescription').value
+    },
+    subject: {
+      reference: `Patient/${patientId}`,
+      display: document.getElementById('patientName').value
+    },
+    authoredOn: document.getElementById('requestDate').value,
+    requester: {
+      reference: `Practitioner/${requesterName.replace(/\s+/g, '_')}`,
+      display: requesterName
+    },
     priority: document.getElementById('priority').value
   };
 
-  console.log('Datos a enviar:', serviceRequestData);
+  console.log('Recurso FHIR:', serviceRequest);
 
-  // Enviar la solicitud al backend
+  // Enviar al backend
   fetch('https://hl7-fhir-ehr-leonardo.onrender.com/service-request', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(serviceRequestData)
+    body: JSON.stringify(serviceRequest)
   })
   .then(response => {
     if (!response.ok) {
@@ -29,15 +44,14 @@ document.getElementById('serviceRequestForm').addEventListener('submit', functio
     return response.json();
   })
   .then(data => {
-    console.log('Success:', data);
     document.getElementById('result').innerHTML = `
-      <div style="background-color: #e6ffe6; border-left: 6px solid #4CAF50; padding: 16px; margin-top: 20px; border-radius: 8px;">
-        <h3 style="color: #2d662d;">¡Servicio registrado exitosamente!</h3>
-        <p><strong>ID:</strong> ${data._id}</p>
-        <p><strong>Paciente:</strong> ${serviceRequestData.patient_name}</p>
-        <p><strong>Procedimiento:</strong> ${serviceRequestData.procedure_description}</p>
-        <p><strong>Solicitado por:</strong> ${serviceRequestData.requester}</p>
-        <p><strong>Fecha:</strong> ${serviceRequestData.request_date}</p>
+      <div style="background-color: #e0fff8; border-left: 6px solid #00b4a0; padding: 16px; border-radius: 8px;">
+        <h3 style="color: #006b5f;">¡Solicitud enviada con éxito!</h3>
+        <p><strong>ID generado:</strong> ${data.id || 'N/A'}</p>
+        <p><strong>Paciente:</strong> ${serviceRequest.subject.display}</p>
+        <p><strong>Procedimiento:</strong> ${serviceRequest.code.text}</p>
+        <p><strong>Médico Solicitante:</strong> ${serviceRequest.requester.display}</p>
+        <p><strong>Fecha:</strong> ${serviceRequest.authoredOn}</p>
       </div>
     `;
     document.getElementById('serviceRequestForm').reset();
@@ -45,7 +59,7 @@ document.getElementById('serviceRequestForm').addEventListener('submit', functio
   .catch(error => {
     console.error('Error:', error);
     document.getElementById('result').innerHTML = `
-      <div style="background-color: #ffe6e6; border-left: 6px solid #f44336; padding: 16px; margin-top: 20px; border-radius: 8px;">
+      <div style="background-color: #ffe6e6; border-left: 6px solid #f44336; padding: 16px; border-radius: 8px;">
         <h3 style="color: #a94442;">Error al crear la solicitud</h3>
         <p>${error.message}</p>
       </div>
